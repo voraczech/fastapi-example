@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Načítání dat</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 20px;
+                padding: 20px;
+            }
+            .data {
+                margin-top: 20px;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 8px;
+                background-color: #f9f9f9;
+            }
+            .error {
+                color: red;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Načítání dat ze serveru</h1>
+        <button id="loadData">Načíst data</button>
+        <div id="output"></div>
+
+        <script>
+            const url = "http://127.0.0.1:8000/zvirata";
+
+            document
+                .getElementById("loadData")
+                .addEventListener("click", () => {
+                    const output = document.getElementById("output");
+                    output.innerHTML = "Načítám data...";
+
+                    fetch(url)
+                        .then((response) => {
+                            if (!response.ok) {
+                                throw new Error(
+                                    `HTTP chyba! Stav: ${response.status}`,
+                                );
+                            }
+                            return response.json();
+                        })
+                        .then((data) => {
+                            output.innerHTML = `<div class="data">Data načtena úspěšně: <pre>${JSON.stringify(
+                                data.zvirata,
+                                null,
+                                2,
+                            )}</pre></div>`;
+                        })
+                        .catch((error) => {
+                            output.innerHTML = `<div class="error">Došlo k chybě: ${error.message}</div>`;
+                        });
+                });
+        </script>
+    </body>
+</html>
